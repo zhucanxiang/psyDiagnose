@@ -230,6 +230,7 @@ class LocalDocQA:
             return None, [one_title]
 
     def get_knowledge_based_answer(self, query, vs_path, chat_history=[], streaming: bool = STREAMING):
+        print("get_knowledge_based_answer vs_path: " + vs_path + "\n")
         vector_store = load_vector_store(vs_path, self.embeddings)
         vector_store.chunk_size = self.chunk_size
         vector_store.chunk_conent = self.chunk_conent

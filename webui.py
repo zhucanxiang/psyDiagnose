@@ -145,6 +145,7 @@ def reinit_model(llm_model, embedding_model, llm_history_len, no_remote_model, u
 
 def get_vector_store(vs_id, files, sentence_size, history, one_conent, one_content_segmentation):
     vs_path = os.path.join(KB_ROOT_PATH, vs_id, "vector_store")
+    print("get_vector_store vs_path: " + vs_path + "; KB_ROOT_PATH: " + KB_ROOT_PATH + "; vs_id: " + vs_id + "\n")
     filelist = []
     if local_doc_qa.llm_model_chain and local_doc_qa.embeddings:
         if isinstance(files, list):
@@ -570,7 +571,7 @@ with gr.Blocks(css=block_css, theme=gr.themes.Default(**default_theme_args)) as 
 (demo
  .queue(concurrency_count=3)
  .launch(server_name='0.0.0.0',
-         server_port=7860,
+         server_port=8088,
          show_api=False,
          share=False,
          inbrowser=False))
