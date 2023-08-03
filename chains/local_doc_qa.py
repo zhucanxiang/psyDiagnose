@@ -338,7 +338,7 @@ if __name__ == "__main__":
     local_doc_qa = LocalDocQA()
     local_doc_qa.init_cfg(llm_model=llm_model_ins)
     query = "本项目使用的embedding模型是什么，消耗多少显存"
-    vs_path = "/media/gpt4-pdf-chatbot-langchain/dev-langchain-ChatGLM/vector_store/test"
+    vs_path = "/media/gpt4-pdf-chatbot-langchain/dev-psyDiagnose/vector_store/test"
     last_print_len = 0
     # for resp, history in local_doc_qa.get_knowledge_based_answer(query=query,
     #                                                              vs_path=vs_path,

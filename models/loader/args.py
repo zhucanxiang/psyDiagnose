@@ -32,8 +32,8 @@ def dir_path(string):
     return s
 
 
-parser = argparse.ArgumentParser(prog='langchain-ChatGLM',
-                                 description='About langchain-ChatGLM, local knowledge based ChatGLM with langchain ｜ '
+parser = argparse.ArgumentParser(prog='psyDiagnose',
+                                 description='About psyDiagnose, local knowledge based ChatGLM with langchain ｜ '
                                              '基于本地知识库的 ChatGLM 问答')
 
 parser.add_argument('--no-remote-model', action='store_true', help='remote in the model on '

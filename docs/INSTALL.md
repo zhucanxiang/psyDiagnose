@@ -34,7 +34,7 @@ $ conda env remove -p  /your_path/env_name
 $ git clone https://github.com/imClumsyPanda/langchain-ChatGLM.git
 
 # 进入目录
-$ cd langchain-ChatGLM
+$ cd psyDiagnose
 
 # 项目中 pdf 加载由先前的 detectron2 替换为使用 paddleocr，如果之前有安装过 detectron2 需要先完成卸载避免引发 tools 冲突
 $ pip uninstall detectron2

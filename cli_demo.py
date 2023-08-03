@@ -73,7 +73,7 @@ def main():
 
 if __name__ == "__main__":
 #     # 通过cli.py调用cli_demo时需要在cli.py里初始化模型，否则会报错：
-    # langchain-ChatGLM: error: unrecognized arguments: start cli
+    # psyDiagnose: error: unrecognized arguments: start cli
     # 为此需要先将
     # args = None
     # args = parser.parse_args()
