@@ -254,10 +254,15 @@ LLM_DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mp
 KB_ROOT_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "knowledge_base")
 
 # 基于上下文的prompt模版，请务必保留"{question}"和"{context}"
+#PROMPT_TEMPLATE = """已知信息：
+#{context}
+#
+#根据上述已知信息，简洁和专业的来回答用户的问题。如果无法从中得到答案，请说 “根据已知信息无法回答该问题” 或 “没有提供足够的相关信息”，不允许在答案中添加编造成分，答案请使用中文。 问题是：{question}"""
+
 PROMPT_TEMPLATE = """已知信息：
 {context} 
 
-根据上述已知信息，简洁和专业的来回答用户的问题。如果无法从中得到答案，请说 “根据已知信息无法回答该问题” 或 “没有提供足够的相关信息”，不允许在答案中添加编造成分，答案请使用中文。 问题是：{question}"""
+根据上述已知信息，请用专业的精神病学、心理学知识回答用户的问题。请给出最有可能的3个疾病及其概率，以及每个疾病对应的诊断依据。如果无法从中得到答案，请说 “根据已知信息无法回答该问题” 或 “没有提供足够的相关信息”，不允许在答案中添加编造成分，答案请使用中文。 问题是：{question}"""
 
 # 缓存知识库数量,如果是ChatGLM2,ChatGLM2-int4,ChatGLM2-int8模型若检索效果不好可以调成’10’
 CACHED_VS_NUM = 1
