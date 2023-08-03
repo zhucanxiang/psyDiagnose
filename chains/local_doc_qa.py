@@ -110,7 +110,7 @@ def generate_prompt(related_docs: List[str],
                     prompt_template: str = PROMPT_TEMPLATE, ) -> str:
     context = "\n".join([doc.page_content for doc in related_docs])
     prompt = prompt_template.replace("{question}", query).replace("{context}", context)
-    print("prompt: " + prompt)
+    logger.info("prompt: " + prompt)
     return prompt
 
 
@@ -231,7 +231,7 @@ class LocalDocQA:
             return None, [one_title]
 
     def get_knowledge_based_answer(self, query, vs_path, chat_history=[], streaming: bool = STREAMING):
-        print("get_knowledge_based_answer vs_path: " + vs_path + "\n")
+        logger.info("get_knowledge_based_answer vs_path: " + vs_path + "\n")
         vector_store = load_vector_store(vs_path, self.embeddings)
         vector_store.chunk_size = self.chunk_size
         vector_store.chunk_conent = self.chunk_conent
@@ -239,7 +239,7 @@ class LocalDocQA:
         related_docs_with_score = vector_store.similarity_search_with_score(query, k=self.top_k)
         for related_doc in related_docs_with_score:
             document, score = related_doc
-            print("content: {}, score: {}".format(document.page_content, score))
+            logger.info("content: {}, score: {}".format(document, score))
         torch_gc()
         if len(related_docs_with_score) > 0:
             prompt = generate_prompt(related_docs_with_score, query)
