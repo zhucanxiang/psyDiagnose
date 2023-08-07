@@ -1,6 +1,8 @@
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from vectorstores import MyFAISS
 from langchain.document_loaders import UnstructuredFileLoader, TextLoader, CSVLoader
+from loader.docxLoader import CCMD3Loader
+from loader.pdfLoader import ICD11Loader
 from configs.model_config import *
 import datetime
 from textsplitter import ChineseTextSplitter
@@ -18,6 +20,7 @@ from langchain.docstore.document import Document
 from functools import lru_cache
 from textsplitter.zh_title_enhance import zh_title_enhance
 from langchain.chains.base import Chain
+from langchain.schema import Document
 
 
 # patch HuggingFaceEmbeddings to make it hashable
@@ -58,8 +61,21 @@ def tree(filepath, ignore_dir_names=None, ignore_file_names=None):
 
 
 def load_file(filepath, sentence_size=SENTENCE_SIZE, using_zh_title_enhance=ZH_TITLE_ENHANCE):
-
-    if filepath.lower().endswith(".md"):
+    if filepath.lower().endswith('ccmd-3.docx'):
+        #CCMD3的文件加载
+        loader = CCMD3Loader(filepath)
+        contents = loader.contents
+        docs = []
+        for content in contents:
+            docs.append(Document(page_content=content, metadata={"source": filepath}))
+    elif filepath.lower().endswith('icd-11.pdf'):
+        #ICD-11文件加载
+        loader = ICD11Loader(file_path=filepath, extract_image=False)
+        contents = loader.contents
+        docs = []
+        for content in contents:
+            docs.append(Document(page_content=content, metadata={"source": filepath}))
+    elif filepath.lower().endswith(".md"):
         loader = UnstructuredFileLoader(filepath, mode="elements")
         docs = loader.load()
     elif filepath.lower().endswith(".txt"):
@@ -110,7 +126,7 @@ def generate_prompt(related_docs: List[str],
                     prompt_template: str = PROMPT_TEMPLATE, ) -> str:
     context = "\n".join([doc.page_content for doc in related_docs])
     prompt = prompt_template.replace("{question}", query).replace("{context}", context)
-    logger.info("prompt: " + prompt)
+    logger.info(f"prompt: {prompt}")
     return prompt
 
 
@@ -231,19 +247,21 @@ class LocalDocQA:
             return None, [one_title]
 
     def get_knowledge_based_answer(self, query, vs_path, chat_history=[], streaming: bool = STREAMING):
-        logger.info("get_knowledge_based_answer vs_path: " + vs_path + "\n")
+        logger.info(f"get_knowledge_based_answer vs_path: {vs_path}")
         vector_store = load_vector_store(vs_path, self.embeddings)
         vector_store.chunk_size = self.chunk_size
         vector_store.chunk_conent = self.chunk_conent
         vector_store.score_threshold = self.score_threshold
         related_docs_with_score = vector_store.similarity_search_with_score(query, k=self.top_k)
+        logger.info("related_docs num: {}".format(str(len(related_docs_with_score))))
         for related_doc in related_docs_with_score:
             document, score = related_doc
-            logger.info("content: {}, score: {}".format(document, score))
+            logger.info(f"content: {document}, score: {score}")
         torch_gc()
         if len(related_docs_with_score) > 0:
             prompt = generate_prompt(related_docs_with_score, query)
         else:
+            logger.info("No related docs, using query as prompt.")
             prompt = query
 
         answer_result_stream_result = self.llm_model_chain(
