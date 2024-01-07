@@ -230,9 +230,10 @@ llm_model_dict = {
 # LLM 名称
 LLM_MODEL = "chatglm2-6b"
 # 量化加载8bit 模型
-LOAD_IN_8BIT = False
+LOAD_IN_8BIT = True
 # Load the model with bfloat16 precision. Requires NVIDIA Ampere GPU.
 BF16 = False
+FP16=True
 # 本地lora存放的位置
 LORA_DIR = "loras/"
 
@@ -280,7 +281,7 @@ LLM_HISTORY_LEN = 3
 VECTOR_SEARCH_TOP_K = 5
 
 # 知识检索内容相关度 Score, 数值范围约为0-1100，如果为0，则不生效，建议设置为500左右，经测试设置为小于500时，匹配结果更精准
-VECTOR_SEARCH_SCORE_THRESHOLD = 500
+VECTOR_SEARCH_SCORE_THRESHOLD = 100
 
 NLTK_DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "nltk_data")
 
